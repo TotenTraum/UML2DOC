@@ -5,5 +5,5 @@ interface IDocObjectFactory {
 
     fun createDocument(): IDocument
 
-    fun createText()
+    fun createText(text: String, fontSize: Int = 24): IText
 }

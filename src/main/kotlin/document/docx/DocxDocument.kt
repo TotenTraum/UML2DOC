@@ -2,6 +2,7 @@ package document.docx
 
 import document.IDocument
 import document.ITable
+import document.IText
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage
 import java.io.File
 import java.io.FileOutputStream
@@ -13,8 +14,9 @@ class DocxDocument : IDocument {
         if (table is DocxTable) doc.mainDocumentPart.addObject(table.data)
     }
 
-    override fun addText(text: String) {
-        doc.mainDocumentPart.addParagraphOfText(text)
+    override fun addText(text: IText) {
+        if(text is DocxText)
+        doc.mainDocumentPart.addObject(text.data)
     }
 
     override fun save(path: String) {

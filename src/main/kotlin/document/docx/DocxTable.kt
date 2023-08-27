@@ -1,7 +1,7 @@
 package document.docx
 
 import document.ITable
-import org.docx4j.jaxb.Context
+import document.IText
 import org.docx4j.model.table.TblFactory
 import org.docx4j.wml.Tbl
 import org.docx4j.wml.Tc
@@ -18,23 +18,14 @@ class DocxTable(rows: Int, cols: Int, cellWidth: Int) : ITable {
         table = TblFactory.createTable(rows, cols, cellWidth)
     }
 
-    override fun setText(row: Int, col: Int, text: String) {
-        val factory = Context.getWmlObjectFactory()
-
+    override fun setText(row: Int, col: Int, text: IText) {
         // Получаем ячейку таблицы по индексу строки и столбца
-        val tr = table.content[row] as Tr
-        val tc = tr.content[col] as Tc
-
-        // Создаем параграф и добавляем в него текст
-        val p = factory.createP()
-        val r = factory.createR()
-        val t = factory.createText()
-        t.value = text
-        r.content.add(t)
-        p.content.add(r)
+        val tableRow = table.content[row] as Tr
+        val tableColumn = tableRow.content[col] as Tc
 
         // Добавляем параграф в ячейку
-        tc.content.add(p)
+        if (text is DocxText)
+            tableColumn.content.add(text.data)
     }
 
 
