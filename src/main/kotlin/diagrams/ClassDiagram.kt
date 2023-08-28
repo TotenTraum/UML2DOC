@@ -13,7 +13,7 @@ class ClassDiagram(private val stream: Stream<Quark<Entity>>) : IDiagram {
             if (!entity.data.bodier.fieldsToDisplay.any() && !entity.data.bodier.methodsToDisplay.any())
                 return@forEach
             val text =
-                factory.createText("Справочник \"${entity.name}\" предназначен для хранения информации о статусах задач.  Атрибуты справочника ")
+                factory.createText("Справочник \"${entity.name}\" предназначен для хранения информации о статусах задач.")
             doc.addText(text)
             if (entity.data.bodier.fieldsToDisplay.any())
                 doc.addTable(fieldTable(factory, entity))
