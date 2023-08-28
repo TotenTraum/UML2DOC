@@ -15,13 +15,12 @@ class DocxDocument : IDocument {
     }
 
     override fun addText(text: IText) {
-        if(text is DocxText)
-        doc.mainDocumentPart.addObject(text.data)
+        if (text is DocxText)
+            doc.mainDocumentPart.addObject(text.data)
     }
 
     override fun save(path: String) {
-        val wordFile = File("myDoc.docx")
-        println(wordFile.absolutePath)
+        val wordFile = File(path)
         val fileOut = FileOutputStream(wordFile)
         doc.save(fileOut)
         fileOut.close()

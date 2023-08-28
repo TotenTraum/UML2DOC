@@ -1,5 +1,6 @@
 package document
 
-interface ITable{
-    fun setText(row: Int, col:Int, text: IText)
+interface ITable {
+
+    fun setText(row: Int, col: Int, text: IText)
 }

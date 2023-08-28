@@ -1,26 +1,25 @@
-import diagrams.DiagramFactory
 import document.IDocObjectFactory
 import document.docx.DocxObjectFactory
 import net.sourceforge.plantuml.SourceStringReader
 import java.io.File
+import java.io.FileNotFoundException
+
 
 fun main(args: Array<String>) {
-    val file = File("Main.plantuml")
+    val file = File("subsystem_chat.puml")
 
-    if (!file.exists()) {
-        file.createNewFile()
-    }
+    if (!file.exists()) throw FileNotFoundException()
 
     val source = file.readText()
-
-    val r = SourceStringReader(source)
-//    val cd = r.blocks[0].diagram as DescriptionDiagram
+    val reader = SourceStringReader(source)
 
     val factory: IDocObjectFactory = DocxObjectFactory()
     val doc = factory.createDocument()
 
-    val diagramFactory = DiagramFactory()
-    val diagram = diagramFactory.create(r.blocks[0].diagram)
-    diagram.write(factory, doc)
-    doc.save("")
+    reader.blocks.forEach {
+//        val diagramFactory = DiagramFactory()
+//        val diagram = diagramFactory.create(it.diagram)
+//        diagram.write(factory, doc)
+    }
+    doc.save("document.docx")
 }
