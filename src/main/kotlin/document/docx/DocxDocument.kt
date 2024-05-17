@@ -21,8 +21,10 @@ class DocxDocument : IDocument {
 
     override fun save(path: String) {
         val wordFile = File(path)
-        val fileOut = FileOutputStream(wordFile)
-        doc.save(fileOut)
-        fileOut.close()
+        if (!wordFile.exists())
+            wordFile.createNewFile()
+        FileOutputStream(wordFile).use {
+            doc.save(it)
+        }
     }
 }

@@ -1,0 +1,159 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class ClassDiagram {
+  + ClassDiagram(Stream<Quark<Entity>>): 
+  - visibilityStatus(String): String
+  - fieldTable(IDocObjectFactory, Quark<Entity>): ITable
+  + write(IDocObjectFactory, IDocument): Unit
+  - methodTable(IDocObjectFactory, Quark<Entity>): ITable
+  - setText(ITable, IDocObjectFactory, Int, Int, String, Int): Unit
+}
+class DescriptionNode {
+  + DescriptionNode(Entity): 
+  + addNode(INode): Unit
+   nodes: List<UseCaseNode>
+   entity: Entity
+   flatNodes: List<UseCaseNode>
+}
+class DiagramFactory {
+  + DiagramFactory(): 
+  + create(Diagram): IDiagram
+}
+class DocxDocument {
+  + DocxDocument(): 
+  + addTable(ITable): Unit
+  + save(String): Unit
+  + addText(IText): Unit
+}
+class DocxObjectFactory {
+  + DocxObjectFactory(): 
+  + createDocument(): IDocument
+  + createText(String, Int): IText
+  + createTable(Int, Int, Int): ITable
+}
+class DocxTable {
+  + DocxTable(Int, Int, Int): 
+  + setText(Int, Int, IText): Unit
+   data: Tbl
+}
+class DocxText {
+  + DocxText(String, Int): 
+   data: P
+   size: Int
+   value: String
+}
+interface IDiagram << interface >> {
+  + write(IDocObjectFactory, IDocument): Unit
+}
+interface IDocObjectFactory << interface >> {
+  + createText(String, Int): IText
+  + createDocument(): IDocument
+  + createTable(Int, Int, Int): ITable
+}
+interface IDocument << interface >> {
+  + addTable(ITable): Unit
+  + addText(IText): Unit
+  + save(String): Unit
+}
+interface INode << interface >> {
+  + addNode(INode): Unit
+}
+interface ITable << interface >> {
+  + setText(Int, Int, IText): Unit
+}
+interface IText << interface >> {
+   size: Int
+   value: String
+}
+interface Iterator<T> << interface >> {
+  + hasNext(): Boolean
+  + next(): T
+}
+class MainKt {
+  + main(String[]): Unit
+}
+class Root {
+  + Root(): 
+   descriptionNodes: List<DescriptionNode>
+}
+class Row {
+  + Row(): 
+   items: List<Item>
+}
+class Template {
+  + Template(): 
+   elements: List<TemplateElement>
+}
+class TemplateElement {
+  # TemplateElement(): 
+}
+class Text {
+  + Text(): 
+   value: String
+}
+class UseCaseDiagram {
+  + UseCaseDiagram(EntityFactory): 
+  - setText(ITable, IDocObjectFactory, Int, Int, String, Int): Unit
+  - itemTable(IDocObjectFactory, Entity, List<UseCaseNode>): ITable
+  + write(IDocObjectFactory, IDocument): Unit
+  - headerTable(IDocObjectFactory): ITable
+  - useCaseDiagram(): Unit
+}
+class UseCaseIterator {
+  + UseCaseIterator(UseCaseNode): 
+  + next(): UseCaseNode
+  + hasNext(): Boolean
+   index: Int
+   notEnd: Boolean
+}
+class UseCaseNode {
+  + UseCaseNode(Entity): 
+  + addNode(INode): Unit
+  + iterator(): UseCaseIterator
+  + toString(): String
+   nodes: List<UseCaseNode>
+   entity: Entity
+}
+entity Item << data >> {
+  + Item(Text, Text): 
+   item: Text
+   header: Text
+}
+
+ClassDiagram       -[#008200,dashed]-^  IDiagram          
+DescriptionNode    -[#008200,dashed]-^  INode             
+DescriptionNode   "1" *-[#595959,plain]-> "nodes\n*" UseCaseNode       
+DiagramFactory     -[#595959,dashed]->  ClassDiagram      : "«create»"
+DiagramFactory     -[#595959,dashed]->  UseCaseDiagram    : "«create»"
+DocxDocument       -[#008200,dashed]-^  IDocument         
+DocxObjectFactory  -[#595959,dashed]->  DocxDocument      : "«create»"
+DocxObjectFactory  -[#595959,dashed]->  DocxTable         : "«create»"
+DocxObjectFactory  -[#595959,dashed]->  DocxText          : "«create»"
+DocxObjectFactory  -[#008200,dashed]-^  IDocObjectFactory 
+DocxTable          -[#008200,dashed]-^  ITable            
+DocxText           -[#008200,dashed]-^  IText             
+MainKt             -[#595959,dashed]->  DiagramFactory    : "«create»"
+MainKt             -[#595959,dashed]->  DocxObjectFactory : "«create»"
+Root              "1" *-[#595959,plain]-> "descriptionNodes\n*" DescriptionNode   
+Row                -[#000082,plain]-^  TemplateElement   
+Row                -[#595959,dashed]->  TemplateElement   : "«create»"
+Row               "1" *-[#595959,plain]-> "items\n*" Item
+Template          "1" *-[#595959,plain]-> "elements\n*" TemplateElement   
+Text               -[#000082,plain]-^  TemplateElement   
+Text               -[#595959,dashed]->  TemplateElement   : "«create»"
+UseCaseDiagram     -[#595959,dashed]->  DescriptionNode   : "«create»"
+UseCaseDiagram     -[#008200,dashed]-^  IDiagram          
+UseCaseDiagram    "1" *-[#595959,plain]-> "root\n1" Root              
+UseCaseDiagram     -[#595959,dashed]->  Root              : "«create»"
+UseCaseDiagram     -[#595959,dashed]->  UseCaseNode       : "«create»"
+UseCaseIterator    -[#008200,dashed]-^  Iterator          
+UseCaseIterator   "1" *-[#595959,plain]-> "node\n1" UseCaseNode       
+UseCaseNode        -[#008200,dashed]-^  INode             
+UseCaseNode        -[#595959,dashed]->  UseCaseIterator   : "«create»"
+Item         +-[#820000,plain]-  Row
+Item        "1" *-[#595959,plain]-> "header\n1" Text
+@enduml
